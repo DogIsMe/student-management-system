@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学生管理系统</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      padding-top: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 960px;
+    }
+    .card {
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .table th {
+      background-color: #f8f9fa;
+    }
+    .btn-action {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="pb-3 mb-4 border-bottom">
+      <h1 class="display-5 fw-bold">学生管理系统</h1>
+    </header>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">学生列表</h5>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+              添加学生
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>年龄</th>
+                    <th>性别</th>
+                    <th>班级</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                  <!-- 学生数据将通过 JavaScript 动态添加 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加学生模态框 -->
+  <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStudentModalLabel">添加学生</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addStudentForm">
+            <div class="mb-3">
+              <label for="studentName" class="form-label">姓名</label>
+              <input type="text" class="form-control" id="studentName" required>
+            </div>
+            <div class="mb-3">
+              <label for="studentAge" class="form-label">年龄</label>
+              <input type="number" class="form-control" id="studentAge" min="6" max="30" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">性别</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="studentGender" id="genderMale" value="男" checked>
+                  <label class="form-check-label" for="genderMale">男</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="studentGender" id="genderFemale" value="女">
+                  <label class="form-check-label" for="genderFemale">女</label>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="studentClass" class="form-label">班级</label>
+              <select class="form-select" id="studentClass" required>
+                <option value="">请选择班级</option>
+                <option value="一年级一班">一年级一班</option>
+                <option value="一年级二班">一年级二班</option>
+                <option value="二年级一班">二年级一班</option>
+                <option value="二年级二班">二年级二班</option>
+                <option value="三年级一班">三年级一班</option>
+                <option value="三年级二班">三年级二班</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="saveStudentBtn">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑学生模态框 -->
+  <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editStudentModalLabel">编辑学生</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editStudentForm">
+            <input type="hidden" id="editStudentId">
+            <div class="mb-3">
+              <label for="editStudentName" class="form-label">姓名</label>
+              <input type="text" class="form-control" id="editStudentName" required>
+            </div>
+            <div class="mb-3">
+              <label for="editStudentAge" class="form-label">年龄</label>
+              <input type="number" class="form-control" id="editStudentAge" min="6" max="30" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">性别</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="editStudentGender" id="editGenderMale" value="男">
+                  <label class="form-check-label" for="editGenderMale">男</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="editStudentGender" id="editGenderFemale" value="女">
+                  <label class="form-check-label" for="editGenderFemale">女</label>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="editStudentClass" class="form-label">班级</label>
+              <select class="form-select" id="editStudentClass" required>
+                <option value="">请选择班级</option>
+                <option value="一年级一班">一年级一班</option>
+                <option value="一年级二班">一年级二班</option>
+                <option value="二年级一班">二年级一班</option>
+                <option value="二年级二班">二年级二班</option>
+                <option value="三年级一班">三年级一班</option>
+                <option value="三年级二班">三年级二班</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="updateStudentBtn">更新</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
